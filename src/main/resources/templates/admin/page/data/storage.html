@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>仓库模块日志可视化</title>
+
+    <div th:include="/common/layui"></div>
+    <div th:include="/common/jq"></div>
+
+
+    <!--添加 layui 自己的js  支持加载-->
+    <script src="/js/houtai/manage_base.js"></script>
+    <!--添加 layui 自己的js  支持加载-->
+    <link rel="stylesheet" href="/css/houtai/manage_base.css">
+    <script src="/js/keyboard.js"></script>
+    <script src="/js/echarts.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+
+
+</head>
+
+
+<body style="padding-top: 3px;">
+
+<div class="layui-table-toolbar" style="margin-bottom: 3px; ">
+
+</div>
+
+<div class="layui-form layui-form-pane" style="margin-bottom: 3px; ">
+
+    <div id="app" style="padding:20px 10px; overflow:hidden;margin-left: 20px">
+        <el-tabs v-model="activeName" @tab-click="handleClick" style="margin-left: 20px">
+            <el-tab-pane label="柱状图数据可视化" name="second">
+                <div id="chart1" style="width: 1000px;height:500px;"></div>
+            </el-tab-pane>
+            <el-tab-pane label="饼状图数据可视化" name="first">
+                <div id="chart2" style="width: 1000px;height:400px;"></div>
+            </el-tab-pane>
+            <el-tab-pane label="折线图数据可视化" name="third">
+                <div id="chart3" style="width: 1000px;height:400px;"></div>
+            </el-tab-pane>
+        </el-tabs>
+
+
+    </div>
+
+</div>
+</body>
+
+<script>
+
+    var vm = new Vue({
+            el: "#app",
+            data() {
+                return {
+                    activeName: 'second'
+                };
+            },
+            methods: {
+                handleClick(tab, event) {
+                    console.log(tab, event);
+                }
+            }
+        })
+    ;
+
+    var myChart1 = echarts.init(document.getElementById('chart1'));
+    var myChart3 = echarts.init(document.getElementById('chart3'));
+    var myChart2 = echarts.init(document.getElementById('chart2'));
+
+    $.get("/log/commonData", {module: "仓库模块"}, function (result) {
+        console.log(result);
+        var option = {
+            color: ['#dd6b66','#759aa0','#e69d87','#8dc1a9','#ea7e53','#eedd78','#73a373','#73b9bc','#7289ab', '#91ca8c','#f49f42'],
+
+            title: {
+                text: '仓库模块日志可视化'
+            },
+            tooltip: {},
+            xAxis: {
+                data: ["添加", "删除", "修改", "查询"]
+            },
+            yAxis: {},
+            series: [{
+                name: '数量',
+                type: 'bar',
+                data: result
+            }]
+        };
+
+        var option3 = {
+            color: ['#c23531','#2f4554', '#61a0a8', '#d48265', '#91c7ae','#749f83',  '#ca8622', '#bda29a','#6e7074', '#546570', '#c4ccd3'],
+
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                data: ["添加", "删除", "修改", "查询"]
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                data: result,
+                type: 'line',
+                areaStyle: {}
+            }]
+        };
+
+        var option2 = {
+            color: ['#dd6b66','#759aa0','#e69d87','#8dc1a9','#ea7e53','#eedd78','#73a373','#73b9bc','#7289ab', '#91ca8c','#f49f42'],
+
+            tooltip: {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : {c} ({d}%)"
+            },
+
+            series: [
+                {
+                    name: '访问来源',
+                    type: 'pie',
+                    radius: '55%',
+                    center: ['50%', '60%'],
+                    data: [
+                        {value: 335, name: '添加'},
+                        {value: 310, name: '删除'},
+                        {value: 234, name: '修改'},
+                        {value: 135, name: '查询'},
+                    ],
+                    itemStyle: {
+                        emphasis: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }
+            ]
+        };
+        for (let i = 0; i < result.length; i++) {
+            option2.series[0].data[i].value = result[i];
+        }
+        myChart2.setOption(option2);
+        myChart1.setOption(option);
+        myChart3.setOption(option3);
+    });
+
+
+</script>
+
+</html>

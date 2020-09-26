@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <!--添加 jq  支持加载-->
+    <script	src="/jq/jquery_2_1.min.js"></script>
+    <!--添加 jq  支持加载-->
+
+    <script type="text/javascript" src="/echarts/echarts.min.js"></script>
+
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/dist/css/AdminLTE.min.css" />
+    <link rel="stylesheet" href="/bower_components/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/ztree/css/zTreeStyle/zTreeStyle.css" />
+    <!-- DataTables -->
+    <link rel="stylesheet" href="/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css" />
+
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic" rel="stylesheet" />
+
+
+    <style>
+    </style>
+
+</head>
+<script>
+    $(function(){
+    });
+</script>
+<body>
+
+<div style="padding: 10px;">
+    <div id="main" style="width: 100%;height:400px;"></div>
+</div>
+
+
+</body>
+<script>
+
+    $(function(){
+        initData();
+    });
+
+    function initData(){
+        var myChart = echarts.init(document.getElementById('main'));
+        var option = {
+            title: {
+                text: '财务曲线图'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: { //这个与下面的必须一样。
+                data:['商品价格','商品收入']
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            toolbox: {
+                feature: {
+                    saveAsImage: {}
+                }
+            },
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                // data: ['西瓜', '土豆', '聚乙烯', '石油']
+                data:[]
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [
+                {
+                    name:'商品价格',
+                    type:'line',
+                    stack: '总量',
+                    // data:[800, 500, 1500, 600]
+                    data:[]
+                },
+                {
+                    name:'商品收入',
+                    type:'line',
+                    stack: '总量',
+                    // data:[1200, 200, 800, 888]
+                    data:[]
+                }
+            ]
+        };
+
+        var series_data = "";
+        //从后台拿数据
+        $.ajax({
+            type:"POST",
+            url:"/admin/goods/list?page=1&limit=100",
+// url:/admin/goods/list?page=1&limit=100;
+            async:false,
+            dataType:"json",
+            success:function(result){
+                for(var i=0;i<result.data.length;i++){
+                    option.xAxis.data.push(result.data[i].name);
+                    option.series[0].data.push(result.data[i].price1);
+                    option.series[1].data.push(result.data[i].price2);
+                }
+
+            }
+        });
+
+        myChart.setOption(option);
+    }
+    // url:"/admin/goods/list?page=1&limit=100",
+
+    $(function(){
+        initData();
+    });
+
+
+
+</script>
+
+<script src="/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="/bower_components/chart.js/Chart.js"></script>
+<script src="/bower_components/raphael/raphael.min.js"></script>
+<script src="/bower_components/fastclick/lib/fastclick.js"></script>
+<script src="/bower_components/morris.js/morris.min.js"></script>
+<script src="/bower_components/Flot/jquery.flot.js"></script>
+<script src="/bower_components/Flot/jquery.flot.resize.js"></script>
+<script src="/bower_components/Flot/jquery.flot.pie.js"></script>
+<script src="/bower_components/Flot/jquery.flot.categories.js"></script>
+<script src="/js/demochart.js"></script>
+
+
+
+<script>
+    layui.use([ 'laydate', 'laypage', 'layer', 'table', 'carousel', 'upload',
+        'element' ], function() {
+        var laydate = layui.laydate //日期
+            , laypage = layui.laypage //分页
+            , layer = layui.layer //弹层
+            , table = layui.table //表格
+            , carousel = layui.carousel //轮播
+            , upload = layui.upload //上传
+            , element = layui.element; //元素操作
+
+    });
+</script>
+</html>

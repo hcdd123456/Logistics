@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="UTF-8">
+<title th:text="${title}"></title>
+
+<div th:include="/common/layui"></div>
+<div th:include="/common/jq"></div>
+
+<!--添加 vue  支持加载-->
+<script src="/vue/vue.min.js"></script>
+    <script src="/js/keyboard.js"></script>
+
+    <!--添加 vue  支持加载-->
+
+<script	src="/city-picker/city-picker.data.js"></script>
+<link href="/city-picker/city-picker.css"	rel="stylesheet" />
+
+<style>
+.layui-form-item {
+	margin-bottom: 3px;
+}
+</style>
+
+</head>
+<script th:inline="javascript">
+/*<![CDATA[*/
+	$(function(){
+		if("[[${order?.staff?.id}]]"!=""){
+			$("#staffId").val([[${order?.staff?.id}]]);
+		}
+	});
+
+	var save_url = [[${save_url}]];
+	function save() {
+		var index = layer.msg('提交中，请稍候', {
+			icon : 16,
+			time : false,
+			shade : 0.8
+		});
+
+		var staffId = $("#staffId").val();
+
+		$.post(save_url, {"staff.id":staffId,receiver:app.receiver,state:1
+		}, function(result) {
+			if (result.success) {
+				window.parent.closeDlg(result.msg);
+			} else {
+				layer.msg(result.msg);
+			}
+		}, 'json');
+	}
+	
+/*]]>*/
+</script>
+<body id="app">
+	
+	<div style="padding: 10px; width: 700px;" class="layui-form layui-form-pane" >
+		<div class="layui-form-item">
+			<label class="layui-form-label">员工名称</label>
+			<div class="layui-input-block">
+				<select id="staffId">
+					<option th:value="${staff.id}"  th:text="${staff.name}" th:each="staff : ${staffList}"  > </option>
+				</select>
+			</div>
+		</div>
+		
+		<div class="layui-form-item">
+			<div class="layui-input-block">
+				<button id="save" class="layui-btn" th:text="${btn_text}" onclick="save()"></button>
+			</div>
+		</div>
+
+	</div>
+</body>
+
+<script type="text/javascript">
+	<select id="staffId">
+			<option th:value="${staff.id}"  th:text="${staff.name}" th:each="staff : ${staffList}"  > </option>
+			</select>
+</script>
+
+
+<script >
+	layui.use([ 'laydate', 'laypage', 'layer', 'table', 'carousel', 'upload',
+			'element' ], function() {
+		var laydate = layui.laydate //日期
+		, laypage = layui.laypage //分页
+		, layer = layui.layer //弹层
+		, table = layui.table //表格
+		, carousel = layui.carousel //轮播
+		, upload = layui.upload //上传
+		, element = layui.element; //元素操作
+		
+	});
+</script>
+
+<script>
+
+
+
+	var app = new Vue({
+		el : '#app',
+		data : {
+		}
+	});
+</script>
+</html>

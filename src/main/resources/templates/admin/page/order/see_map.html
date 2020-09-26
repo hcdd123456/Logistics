@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title  >查看地图位置</title>
+
+<div th:include="/common/layui"></div>
+<div th:include="/common/jq"></div>
+
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=C356fa79e683d3234f089c5dfd5fda2f"></script>
+    <script src="/js/keyboard.js"></script>
+
+
+
+    <style>
+body, html{width: 100%;height: 100%;overflow: hidden;margin:0;font-family:"微软雅黑";}
+#allmap {width: 100%;height: 90%;overflow: hidden;margin:0;font-family:"微软雅黑";}
+</style>
+
+</head>
+<body id="app">
+	<div id="allmap" style="flex:1;-webkit-flex:1;"></div>
+</body>
+<script>
+//百度地图API功能
+var map = new BMap.Map("allmap");    // 创建Map实例
+map.centerAndZoom(new BMap.Point(116.404, 39.915), 11);  // 初始化地图,设置中心点坐标和地图级别
+//添加地图类型控件    混合 2d地图
+/* map.addControl(new BMap.MapTypeControl({
+		mapTypes:[
+            BMAP_NORMAL_MAP,
+            BMAP_HYBRID_MAP
+]})); */	
+//添加地图类型控件  混合 2d地图
+
+map.setCurrentCity("北京"); // 设置地图显示的城市 此项是必须设置的
+map.enablePinchToZoom();
+map.enableDoubleClickZoom();
+map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+
+var top_left_control = new BMap.ScaleControl({anchor: BMAP_ANCHOR_TOP_LEFT});// 左上角，添加比例尺
+var top_left_navigation = new BMap.NavigationControl();  //左上角，添加默认缩放平移控件
+var top_right_navigation = new BMap.NavigationControl({anchor: BMAP_ANCHOR_TOP_RIGHT, type: BMAP_NAVIGATION_CONTROL_SMALL}); //右上角，仅包含平移和缩放按钮
+
+map.addControl(top_left_control);        
+map.addControl(top_left_navigation);     
+
+var p1 = new BMap.Point('[[${order.p1_lng}]]', '[[${order.p1_lat}]]');
+var p2 = new BMap.Point('[[${order.p2_lng}]]', '[[${order.p2_lat}]]');
+
+//规划路线
+var driving = new BMap.DrivingRoute(map, {renderOptions:{map: map, autoViewport: true}});
+driving.search(p1, p2);
+//规划路线
+
+</script>
+
+<script >
+	layui.use([ 'laydate', 'laypage', 'layer', 'table', 'carousel', 'upload',
+			'element' ], function() {
+		var laydate = layui.laydate //日期
+		, laypage = layui.laypage //分页
+		, layer = layui.layer //弹层
+		, table = layui.table //表格
+		, carousel = layui.carousel //轮播
+		, upload = layui.upload //上传
+		, element = layui.element; //元素操作
+		
+	});
+</script>
+</html>

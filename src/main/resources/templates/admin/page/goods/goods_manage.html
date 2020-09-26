@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="UTF-8">
+	<title th:text="${title}"></title>
+
+	<div th:include="/common/layui"></div>
+	<div th:include="/common/jq"></div>
+
+
+	<!--添加 layui 自己的js  支持加载-->
+	<script	src="/js/houtai/manage_base.js"></script>
+	<link rel="stylesheet"	href="/css/houtai/manage_base.css">
+    <script src="/js/keyboard.js"></script>
+
+    <!--添加 layui 自己的js  支持加载-->
+
+
+</head>
+
+<style>
+	/*修改table表格  左右内边框 为0*/
+	.layui-table-cell {
+		padding-left: 0px;
+		padding-right: 0px;
+		text-align: center;
+	}
+	/*修改table表格 左右内边框 为0*/
+
+	/* 修改搜索条 左右  pading为 0  */
+	.layui-form-pane .layui-form-label{
+		padding-left: 0px;
+		padding-right: 0px;
+	}
+	/* 修改搜索条 左右  pading为 0  */
+</style>
+
+<script>
+	//定义在外面。可以代码中  使用 table
+	var table;
+	layui.use([ 'laydate', 'laypage', 'layer','form', 'table', 'carousel',
+		'upload', 'element' ], function() {
+		table = layui.table;
+	});
+
+	var global_ids;
+	var global_ids_len;
+
+	var w ;//窗口的宽
+	var h ;//窗口的高
+
+	//打开编辑窗口
+	function add(){
+		w = 700;
+		h = 600;
+		checkWindow();
+		layer.open({
+			type: 2,
+			title: '添加',
+			shadeClose: false,
+			shade: 0.8,
+			area: [w+'px', h+'px'],
+			content: '/houtai/goods/add'  //iframe的url
+		});
+	}
+
+	//打开编辑窗口
+	function edit(id){
+		w = 700;
+		h = 600;
+		checkWindow();
+		layer.open({
+			type: 2,
+			title: '修改',
+			shadeClose: false,
+			shade: 0.8,
+			area: [w+'px', h+'px'],
+			content: '/houtai/goods/edit?id='+id //iframe的url
+		});
+	}
+
+
+	//子窗口调用 的  关闭窗口方法
+	function closeDlg(msg){
+		layer.closeAll();
+		layer.msg(msg);
+		reload_data();
+	}
+
+	//相当前刷新  重新加载
+	function reload_data(){
+		var q = $("#q").val();
+		table.reload('table', {
+			where: {q:q
+			},page: {curr: 1 //重新从第 1 页开始
+			}
+		});
+	}
+
+	function del(ids){
+		var index = layer.load(1, {
+			shade: [0.1,'#fff'] //0.1透明度的白色背景
+		});
+		$.post('/admin/goods/delete',{ids:ids},function(result){
+			if(result.success){
+				layer.closeAll();
+				layer.msg('删除成功');
+				reload_data();
+			}else{
+				layer.closeAll();
+				layer.msg(result.msg);
+			}
+		},'json');
+	}
+
+
+</script>
+<body style="padding-top: 3px;">
+
+<div class="layui-table-toolbar" style="margin-bottom: 3px; ">
+	<div class="layui-btn-group">
+		<button onclick="add()"  class="layui-btn layui-btn-sm"><i class="layui-icon">&#xe654;</i>添加</button>
+
+		<button onclick="delSelected()" class="layui-btn layui-btn-sm layui-btn-danger"><i class="layui-icon">&#xe640;</i>删除</button>
+		<button class="layui-btn layui-btn-sm" onclick="reload_data()"><i class="layui-icon">&#xe669;</i>刷新</button>
+	</div>
+</div>
+
+<div class="layui-form layui-form-pane" style="margin-bottom: 3px; "  >
+	<div class="layui-form-item" style="margin-bottom: 1px; min-width:1051px;">
+		<label class="layui-form-label" style="width: 55px;">搜索</label>
+		<div class="layui-input-inline" style="width: 128px; margin-right: 0px;">
+			<input type="text" id="q"  placeholder="输入搜索内容" class="layui-input"  onkeydown="if(event.keyCode==13) reload_data()" />
+		</div>
+
+		<div class="layui-input-inline" style="  width: 113px;">
+			<a class="layui-btn" onclick="reload_data()">查询</a>
+		</div>
+	</div>
+</div>
+
+<table class="layui-hide"   id="table" lay-filter="table"></table>
+</body>
+
+<script type="text/html" id="table_bar">
+	<div class="layui-btn-group">
+		<a class="layui-btn layui-btn-xs" lay-event="edit">修改</a>
+	</div>
+</script>
+
+
+<script type="text/html" id="format_type">
+	{{#  if(d.type==1){ }}
+	普通
+	{{#  } else if(d.type==2){   }}
+	危货
+	{{#  }else if(d.type==3){      }}
+	急货
+	{{#    }   }}
+</script>
+
+
+<script type="text/html" id="format_man">
+	{{#  if(d.man==1){ }}
+	满仓
+	{{#  } else{   }}
+	未满
+	{{#  }     }}
+</script>
+
+<script th:inline="none">
+	/*<![CDATA[*/
+	layui.use([ 'laydate', 'laypage', 'layer', 'table', 'carousel',
+		'upload', 'element' ], function() {
+		var laydate = layui.laydate //日期
+				, laypage = layui.laypage //分页
+				,layer = layui.layer //弹层
+				,form= layui.form
+				, table = layui.table //表格
+				, carousel = layui.carousel //轮播
+				, upload = layui.upload //上传
+				, element = layui.element; //元素操作
+
+		table.render({
+			elem: '#table'
+			,url: '/admin/goods/list'
+			,height: 'full-60'
+			,totalRow: true
+			,cols: [[
+				{checkbox: true, fixed: true}
+
+				,{field:'number', title: '商品编号', width:72,  style:'font-size: 12px;' }
+				,{field:'name', title: '商品名称', width:100,style:'font-size: 12px;' }
+				,{field:'type', title: '商品类型', width:80,style:'font-size: 12px;', templet: '#format_type' }
+				,{field:'num', title: '商品数量', width:100 ,style:'font-size: 12px;'}
+				,{field:'weight', title: '商品重量', width:100 ,style:'font-size: 12px;'}
+
+				,{field:'price1', title: '商品价格', width:129 ,style:'font-size: 12px;'}
+				,{field:'price2', title: '商品收入', width:129 ,style:'font-size: 12px;'}
+
+
+				,{field:'remark', title: '备注 ', width:264,  style:'font-size: 12px;'  }
+
+				,{fixed:'right', width:250,title: '操作',  toolbar: '#table_bar'}
+			]]
+			,id: 'table'
+			,page: true
+			,limits:[500,1000,2000,3000],
+			limit:100
+		});
+
+		//监听工具条 table_bar
+		table.on('tool(table)', function(obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+			var data = obj.data //获得当前行数据
+					, layEvent = obj.event; //获得 lay-event 对应的值
+			if (layEvent === 'edit') {
+				edit(data.id);
+			}
+		});
+
+	});
+	/*]]>*/
+</script>
+
+
+
+</html>

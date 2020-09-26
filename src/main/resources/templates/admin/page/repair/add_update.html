@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="UTF-8">
+<title th:text="${title}"></title>
+
+<div th:include="/common/layui"></div>
+<div th:include="/common/jq"></div>
+
+<!--添加 vue  支持加载-->
+<script src="/vue/vue.min.js"></script>
+    <script src="/js/keyboard.js"></script>
+
+    <!--添加 vue  支持加载-->
+
+<style>
+.layui-form-item {
+	margin-bottom: 3px;
+}
+</style>
+
+</head>
+<script>
+/*<![CDATA[*/
+
+$(function(){
+	if("[[${repair?.car?.id}]]"!=""){
+		$("#carId").val([[${repair?.car?.id}]]);
+	}
+	if("[[${repair?.type}]]"!=""){
+		$("#type").val([[${repair?.type}]]);
+	}
+});
+	var save_url = '[[${save_url}]]';
+	function save() {
+		var index = layer.msg('提交中，请稍候', {
+			icon : 16,
+			time : false,
+			shade : 0.8
+		});
+		var carId = $("#carId").val();
+		var createDateTime= $("#createDateTime").val();
+		var type= $("#type").val();
+
+		//<option th:value="${car.id}"  th:text="${car.number}" th:each="car : ${carList}"  th:if="${car.state==1}" > </option>-->
+		$.post(save_url, {'car.id':carId,type:type,day:app.day
+			,createDateTime: createDateTime
+		}, function(result) {
+			if (result.success) {
+				window.parent.closeDlg(result.msg);
+			} else {
+				layer.msg(result.msg);
+			}
+		}, 'json');
+	}
+
+	function refresh(){
+		location.replace(location.href);
+	}
+/*]]>*/
+</script>
+<body id="app">
+	
+	<div style="padding: 10px; width: 700px;" class="layui-form layui-form-pane" >
+		
+		<div class="layui-form-item">
+			<label class="layui-form-label">车辆</label>
+			<div class="layui-input-block">
+				<select id="carId"  >
+
+			        <option th:value="${car.id}"  th:text="${car.number}" th:each="car : ${carList}"   > </option>
+			      </select>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">维修部位</label>
+			<div class="layui-input-block">
+				<select id="type"  >
+			        <option  value="1">车身</option>
+			        <option  value="2">轮胎</option>
+			        <option  value="3">零件</option>
+			      </select>
+			</div>
+		</div>
+		
+		<div class="layui-form-item">
+			<label class="layui-form-label">日期</label>
+			<div class="layui-input-block">
+				        <input type="text" class="layui-input" id="createDateTime" placeholder="yyyy-MM-dd">
+
+			</div>
+		</div>
+		 <div class="layui-form-item">
+			<label class="layui-form-label">维修费用</label>
+			<div class="layui-input-block">
+				<input type="text" v-model="day" th:value="${repair?.day}"
+					autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		
+		<div class="layui-form-item">
+			<div class="layui-input-block">
+				<button id="save" class="layui-btn" th:text="${btn_text}" onclick="save()"></button>
+			</div>
+		</div>
+		
+	</div>
+</body>
+
+<script>
+	layui.use([ 'laydate', 'laypage', 'layer', 'table', 'carousel', 'upload',
+			'element' ], function() {
+		var laydate = layui.laydate //日期
+		, laypage = layui.laypage //分页
+		, layer = layui.layer //弹层
+		, table = layui.table //表格
+		, carousel = layui.carousel //轮播
+		, upload = layui.upload //上传
+		, element = layui.element; //元素操作
+	 
+		//日期时间选择器
+		  laydate.render({
+		    elem: '#createDateTime'
+		    ,type: 'date'
+		    ,value: "[[${#dates.format(repair?.createDateTime, 'yyyy-MM-dd')}]]"
+		    ,isInitValue: true
+		  });
+		
+		
+	});
+</script>
+
+<script>
+
+
+
+	var app = new Vue({
+		el : '#app',
+		data : {
+		}
+	});
+</script>
+</html>

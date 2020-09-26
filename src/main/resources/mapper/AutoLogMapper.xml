@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.javayjx.dao.ser.AutoLogMapper">
+    <insert id="insert">
+        insert into log (description, model_type, operation_type, username, ip)
+        VALUES (#{description,jdbcType=VARCHAR}, #{modelType}, #{operationType}, #{username,jdbcType=VARCHAR}, #{ip})
+    </insert>
+    <select id="getSelectData" resultType="java.lang.String">
+        SELECT count(*) FROM log WHERE model_type = #{module} and operation_type = "查询"
+    </select>
+    <select id="getAddData" resultType="java.lang.String">
+        SELECT count(*) FROM log WHERE model_type = #{module} and operation_type = "添加"
+    </select>
+    <select id="getEditData" resultType="java.lang.String">
+        SELECT count(*) FROM log WHERE model_type = #{module} and operation_type = "修改"
+    </select>
+    <select id="getDelData" resultType="java.lang.String">
+        SELECT count(*) FROM log WHERE model_type = #{module} and operation_type = "删除"
+</select>
+</mapper>
