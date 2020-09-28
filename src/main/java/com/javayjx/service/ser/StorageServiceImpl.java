@@ -69,17 +69,17 @@ public class StorageServiceImpl implements StorageService {
 	@Override
 	public List<Storage> list(Map<String, Object> map, Integer page, Integer pageSize) {
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.Direction.DESC, "id");
+
 		Page<Storage> pages = storageDao.findAll(new Specification<Storage>() {
-			
+
 			@Override
 			public Predicate toPredicate(Root<Storage> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				Predicate predicate = cb.conjunction();
-
-				/*// 新加！！！！
-				if (map.get("goods") != null) {
-					predicate.getExpressions().add(cb.equal(root.get("goods"), map.get("goods")));
-				}*/
-					
+//				System.out.println("warehouseId...................................."+map.get("warehouseId"));
+                /**精确查询**/
+				if(map.get("warehouseId") != null){
+				predicate = cb.and(predicate, cb.equal(root.get("warehouse"), map.get("warehouseId")));
+				}
 				// 模糊查询
 				if (map.get("q") != null) {
 					predicate.getExpressions().add(cb.or(

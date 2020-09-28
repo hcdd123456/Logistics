@@ -1,5 +1,6 @@
 package com.javayjx.dao.ser;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -11,4 +12,6 @@ public interface StorageDao  extends JpaRepository<Storage,Integer>,JpaSpecifica
 	
 	@Query(value="select * from t_storage  where id = ?1",nativeQuery = true)
 	public Storage findId(Integer id);
+
+
 }

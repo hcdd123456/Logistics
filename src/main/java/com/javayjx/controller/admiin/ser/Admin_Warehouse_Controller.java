@@ -7,6 +7,7 @@ import com.javayjx.entity.ser.Warehouse;
 import com.javayjx.service.ser.WarehouseService;
 import com.javayjx.util.DateUtil;
 import com.javayjx.util.StringUtil;
+import com.mchange.lang.IntegerUtils;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -38,11 +39,14 @@ public class Admin_Warehouse_Controller {
     public Map<String, Object> list(@RequestParam(value = "page", required = false) Integer page,
                                     @RequestParam(value = "limit", required = false) Integer limit,
                                     @RequestParam(value = "q", required = false) String q,
+                                    @RequestParam(value = "warehouseId", required = false) String warehouseId,
                                     HttpServletResponse response,
                                     HttpServletRequest request) throws Exception {
         Map<String, Object> map = new HashMap<String, Object>();
-        if(StringUtil.isNotEmpty( q)) {
+
+        if(StringUtil.isNotEmpty( q)|| warehouseId!=null) {
             map.put("q", q);
+            map.put("warehouseId", warehouseId);
         }
         List<Warehouse> list = warehouseService.list(map, page-1, limit);
         long total = warehouseService.getTotal(map);

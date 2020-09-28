@@ -34,7 +34,7 @@ public class Client {
 	private  String remark;//备注
 	
 	@Column(length=10)
-	private Integer age;// 1男  2女
+	private Integer age;//
 	@Column(length=100)
 	private String address;// 地址
 	

@@ -104,10 +104,12 @@ public class Admin_Storage_Controller {
 			HttpServletResponse response,
 			HttpServletRequest request) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(goodsId!=null) {
+		System.out.println("controller..............................."+map.get("warehouseId"));
+		if(goodsId!=null|| warehouseId!=null) {
 			Goods goods= new Goods();
 			goods.setId(goodsId);
 			map.put("goods",  goods);
+			map.put("warehouseId", warehouseId);
 		}
 		if(warehouseId!=null){
 			Warehouse warehouse = new Warehouse();

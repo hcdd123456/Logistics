@@ -62,7 +62,7 @@ public class DeptServiceImpl implements DeptService {
 				if (map.get("goods") != null) {
 					predicate.getExpressions().add(cb.equal(root.get("goods"), map.get("goods")));
 				}*/
-
+                System.out.println("DeptMap........................."+map.get("q"));
                 // 模糊查询
                 if (map.get("q") != null) {
                     predicate.getExpressions().add(cb.or(

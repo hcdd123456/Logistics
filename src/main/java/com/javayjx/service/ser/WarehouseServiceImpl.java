@@ -60,13 +60,18 @@ public class WarehouseServiceImpl implements WarehouseService {
             @Override
             public Predicate toPredicate(Root<Warehouse> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 Predicate predicate = cb.conjunction();
-
+                System.out.println("WarehouseMap........................."+map.get("warehouseId"));
                 // 模糊查询
-                if (map.get("q") != null) {
+//                if (map.get("q") != null ) {
+//                    predicate.getExpressions().add(cb.or(
+//                            cb.like(root.get("warehouseName"),"%"+map.get("q").toString()+"%"),
+//                            cb.like(root.get("warehouseType"),"%"+map.get("q").toString()+"%"),
+//                            cb.like(root.get("warehouseModel"),"%"+map.get("q").toString()+"%")
+//                    ));
+//                }
+                if (map.get("warehouseId") != null ) {
                     predicate.getExpressions().add(cb.or(
-                            cb.like(root.get("warehouseName"),"%"+map.get("q").toString()+"%"),
-                            cb.like(root.get("warehouseType"),"%"+map.get("q").toString()+"%"),
-                            cb.like(root.get("warehouseModel"),"%"+map.get("q").toString()+"%")
+                            cb.like(root.get("warehouseName"),"%"+map.get("warehouseId").toString()+"%")
                     ));
                 }
                 return predicate;
@@ -85,9 +90,9 @@ public class WarehouseServiceImpl implements WarehouseService {
                 // 模糊查询
                 if (map.get("q") != null) {
                     predicate.getExpressions().add(cb.or(
-                            cb.like(root.get("warehouseName"),"%"+map.get("q").toString()+"%"),
-                            cb.like(root.get("warehouseType"),"%"+map.get("q").toString()+"%"),
-                            cb.like(root.get("warehouseModel"),"%"+map.get("q").toString()+"%")
+                            cb.like(root.get("warehouseName"),"%"+map.get("q").toString()+"%")
+//                            cb.like(root.get("warehouseType"),"%"+map.get("q").toString()+"%"),
+//                            cb.like(root.get("warehouseModel"),"%"+map.get("q").toString()+"%")
                     ));
                 }
 

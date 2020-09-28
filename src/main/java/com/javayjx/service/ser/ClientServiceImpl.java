@@ -82,8 +82,7 @@ public class ClientServiceImpl implements ClientService {
 			@Override
 			public Predicate toPredicate(Root<Client> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				Predicate predicate = cb.conjunction();
-				 
-					
+
 				// 模糊查询
 				if (map.get("q") != null) {
 					predicate.getExpressions().add(cb.or(

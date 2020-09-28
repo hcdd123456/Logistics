@@ -75,16 +75,16 @@
 
 
 <div style="padding: 10px; width: 700px;" class="layui-form layui-form-pane" >
-	<div class="layui-form-item">
-		<label class="layui-form-label">客户编号</label>
-		<div class="layui-input-block">
-			<input type="text" v-model="number" th:value="${client?.number}"
-				   autocomplete="off" class="layui-input">
-		</div>
-	</div>
+<!--	<div class="layui-form-item">-->
+<!--		<label class="layui-form-label">供货商编号</label>-->
+<!--		<div class="layui-input-block">-->
+<!--			<input type="text" v-model="number" th:value="${client?.number}"-->
+<!--				   autocomplete="off" class="layui-input">-->
+<!--		</div>-->
+<!--	</div>-->
 
 	<div class="layui-form-item">
-		<label class="layui-form-label">客户姓名</label>
+		<label class="layui-form-label">供货商姓名</label>
 		<div class="layui-input-block">
 			<input type="text" v-model="trueName" th:value="${client?.trueName}"
 				   autocomplete="off" class="layui-input">
@@ -92,7 +92,7 @@
 	</div>
 
 	<div class="layui-form-item">
-		<label class="layui-form-label">年龄</label>
+		<label class="layui-form-label">供货商年龄</label>
 		<div class="layui-input-block">
 			<input type="text" v-model="age" th:value="${client?.age}"
 				   autocomplete="off" class="layui-input">
@@ -100,7 +100,7 @@
 	</div>
 
 	<div class="layui-form-item">
-		<label class="layui-form-label">客户性别</label>
+		<label class="layui-form-label">供货商性别</label>
 		<div class="layui-input-block">
 			<select id="sex"  >
 				<option value="1">男</option>
@@ -110,7 +110,7 @@
 	</div>
 
 	<div class="layui-form-item">
-		<label class="layui-form-label">客户电话</label>
+		<label class="layui-form-label">供货商电话</label>
 		<div class="layui-input-block">
 			<input type="text" v-model="phone" th:value="${client?.phone}"
 				   autocomplete="off" class="layui-input">
@@ -126,7 +126,7 @@
 	</div>
 
 	<div class="layui-form-item">
-		<label class="layui-form-label">客户级别</label>
+		<label class="layui-form-label">供货商级别</label>
 		<div class="layui-input-block">
 			<select id="type"  >
 				<option value="1">普通</option>
@@ -136,7 +136,7 @@
 	</div>
 
 	<div class="layui-form-item">
-		<label class="layui-form-label">客户地址</label>
+		<label class="layui-form-label">供货商地址</label>
 		<div class="layui-input-block">
 			<input type="text" v-model="address" th:value="${client?.address}"
 				   autocomplete="off" class="layui-input">
